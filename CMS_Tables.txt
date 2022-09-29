@@ -1,0 +1,116 @@
+Admin :
+=====
+mysql> create table Admin(
+    -> username varchar(25) PRIMARY KEY,
+    -> password varchar(25) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc admin;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| username | varchar(25) | NO   | PRI | NULL    |       |
+| password | varchar(25) | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+
+Faculty :
+=======
+mysql> create table Faculty(
+    -> facultyid int AUTO_INCREMENT PRIMARY KEY,
+    -> facultyname varchar(25) NOT NULL,
+    -> facultyaddress varchar(25) NOT NULL,
+    -> mobile varchar(13) NOT NULL,
+    -> email varchar(25) NOT NULL,
+    -> username varchar(25) NOT NULL,
+    -> password varchar(25) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc faculty;
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| facultyid      | int         | NO   | PRI | NULL    | auto_increment |
+| facultyname    | varchar(25) | NO   |     | NULL    |                |
+| facultyaddress | varchar(25) | NO   |     | NULL    |                |
+| mobile         | varchar(13) | NO   |     | NULL    |                |
+| email          | varchar(25) | NO   |     | NULL    |                |
+| username       | varchar(25) | NO   |     | NULL    |                |
+| password       | varchar(25) | NO   |     | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+Course:
+======
+mysql> create table Course(
+    -> coursed int AUTO_INCREMENT PRIMARY KEY,
+    -> courseName varchar(25) NOT NULL,
+    -> fee int NOT NULL,
+    -> courseDescription varchar(40) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc course;
++-------------------+-------------+------+-----+---------+----------------+
+| Field             | Type        | Null | Key | Default | Extra          |
++-------------------+-------------+------+-----+---------+----------------+
+| coursed           | int         | NO   | PRI | NULL    | auto_increment |
+| courseName        | varchar(25) | NO   |     | NULL    |                |
+| fee               | int         | NO   |     | NULL    |                |
+| courseDescription | varchar(40) | NO   |     | NULL    |                |
++-------------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+Batch:
+=====
+mysql> create table Batch(
+    -> batchId int AUTO_INCREMENT PRIMARY KEY,
+    -> courseId int,
+    -> facultyId int,
+    -> numberofStudents int NOT NULL,
+    -> batchstartDate date NOT NULL,
+    -> duration varchar(25),
+    -> FOREIGN KEY (courseId) references Course(coursed),
+    -> FOREIGN KEY (facultyId) references Faculty(facultyid)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc batch;
++------------------+-------------+------+-----+---------+----------------+
+| Field            | Type        | Null | Key | Default | Extra          |
++------------------+-------------+------+-----+---------+----------------+
+| batchId          | int         | NO   | PRI | NULL    | auto_increment |
+| courseId         | int         | YES  | MUL | NULL    |                |
+| facultyId        | int         | YES  | MUL | NULL    |                |
+| numberofStudents | int         | NO   |     | NULL    |                |
+| batchstartDate   | date        | NO   |     | NULL    |                |
+| duration         | varchar(25) | YES  |     | NULL    |                |
++------------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+CoursPlan:
+=========
+mysql> create table CoursPlan(
+    -> planId int AUTO_INCREMENT PRIMARY KEY,
+    -> batchId int,
+    -> daynumber int NOT NULL,
+    -> topic varchar(25) NOT NULL,
+    -> status varchar(10) NOT NULL,
+    -> FOREIGN KEY (batchId) references Batch(batchId)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc CoursPlan;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| planId    | int         | NO   | PRI | NULL    | auto_increment |
+| batchId   | int         | YES  | MUL | NULL    |                |
+| daynumber | int         | NO   |     | NULL    |                |
+| topic     | varchar(25) | NO   |     | NULL    |                |
+| status    | varchar(10) | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
