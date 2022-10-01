@@ -14,4 +14,10 @@ public class FacultyImps implements Facultyuserdao{
 		return null;
 	}
 
+	@Override
+	public boolean login(String un,String pass) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
