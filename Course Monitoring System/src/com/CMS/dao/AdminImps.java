@@ -10,10 +10,12 @@ import java.util.List;
 import com.CMS.bean.Batch;
 import com.CMS.bean.CoursPlan;
 import com.CMS.bean.Course;
+import com.CMS.bean.DayWisePlanner;
 import com.CMS.bean.Faculty;
 import com.CMS.exceptions.BatchException;
 import com.CMS.exceptions.CoursPlanException;
 import com.CMS.exceptions.CourseException;
+import com.CMS.exceptions.DayWisePlannerException;
 import com.CMS.exceptions.FacultyException;
 import com.CMS.utility.DBUtil;
 
@@ -286,15 +288,7 @@ public class AdminImps implements Adminuserdao {
 	@Override
 	public String createBatch(Batch b) {
 		String messege = "Batch Not Created...";
-		try (Connection conn = DBUtil.provideConnction()) {
-			PreparedStatement p1 = conn.prepareStatement("select * from course Where coursed=?");
-			PreparedStatement p2 = conn.prepareStatement("select * from faculty Where facultyid=?");
-			p1.setInt(1, b.getCourseId());
-			p2.setInt(2, b.getFacultyId());
-			ResultSet rs1 = p1.executeQuery();
-			ResultSet rs2 = p2.executeQuery();
-			if (rs1.next() && rs2.next()) {
-				try {
+				try(Connection conn = DBUtil.provideConnction()) {
 					PreparedStatement p = conn.prepareStatement(
 							"insert into batch(courseId,facultyId,numberofStudents,batchstartDate,duration) values(?,?,?,?,?)");
 					p.setInt(1, b.getCourseId());
@@ -304,20 +298,11 @@ public class AdminImps implements Adminuserdao {
 					p.setString(5, b.getDuration());
 					int n = p.executeUpdate();
 					if (n > 0) {
-						messege = "Course Inserted Successfully !";
+						messege = "Batch Created Successfully !";
 					}
 				} catch (SQLException e) {
 					messege = e.getMessage();
 				}
-			} else if (rs1.next()) {
-				messege = "Course ID is not present";
-			} else if (rs2.next()) {
-				messege = "Faculty ID is not present";
-			}
-		} catch (Exception e) {
-			messege = e.getMessage();
-		}
-
 		return messege;
 	}
 
@@ -634,20 +619,14 @@ public class AdminImps implements Adminuserdao {
 	@Override
 	public String createCoursePlan(CoursPlan cp) {
 		String messege = "Course Plan Not Created...";
-		try (Connection conn = DBUtil.provideConnction()) {
-			PreparedStatement p = conn
-					.prepareStatement("select * from batch where batchId=?");
-			p.setInt(1,cp.getBatchId());
-			ResultSet rs = p.executeQuery();
-			if(rs.next()) {
-				try {
+				try (Connection conn = DBUtil.provideConnction()){
 					PreparedStatement pc = conn
 							.prepareStatement("insert into CoursPlan(batchId,daynumber,topic,status) values(?,?,?,?)");
 					pc.setInt(1,cp.getBatchId());
 					pc.setInt(2,cp.getDaynumber());
 					pc.setString(3,cp.getTopic());
 					pc.setString(4,cp.getStatus());
-					int n = p.executeUpdate();
+					int n = pc.executeUpdate();
 					if (n > 0) {
 						messege = "Course Plan Created Successfully !";
 					}	
@@ -655,11 +634,6 @@ public class AdminImps implements Adminuserdao {
 			catch (SQLException e) {
 				messege = e.getMessage();
 			}
-			}
-		} catch (SQLException e) {
-			messege = e.getMessage();
-		}
-
 		return messege;
 	}
 
@@ -921,6 +895,78 @@ public class AdminImps implements Adminuserdao {
 		}
 
 		return flag;
+	}
+
+	@Override
+	public List<DayWisePlanner> ViewDaywiseupdateofeverybatch() throws DayWisePlannerException {
+		List<DayWisePlanner> ls=new ArrayList<DayWisePlanner>();
+		try (Connection conn = DBUtil.provideConnction()) {
+			PreparedStatement p = conn
+					.prepareStatement("select * from daywiseplanner order by date");
+			
+			ResultSet rs = p.executeQuery();
+			
+			if (rs.next()) {
+				while(rs.next()) {
+					String date= rs.getString("date");
+					int fid=rs.getInt("FacultyId");
+					int m=rs.getInt("morning");
+					int a=rs.getInt("afternoon");
+					int e=rs.getInt("evening");
+					DayWisePlanner dwp=new DayWisePlanner();
+					dwp.setDate(date);
+					dwp.setFacultyId(fid);
+					dwp.setMorning(m);
+					dwp.setAfternoon(a);
+					dwp.setEvening(e);
+					ls.add(dwp);
+				}
+			}
+		} catch (SQLException e) {
+			e.getMessage();
+		}
+		if(ls.size()>0) {
+			return ls;
+		}
+		else {
+			throw new DayWisePlannerException("No Result Found");
+		}
+	}
+
+	@Override
+	public List<CoursPlan> GenerateReportforeverybatch() throws CoursPlanException {
+		List<CoursPlan> ls = new ArrayList<CoursPlan>();
+		try (Connection conn = DBUtil.provideConnction()) {
+			PreparedStatement p = conn.prepareStatement("select * from CoursPlan order by batchId");
+
+			ResultSet rs = p.executeQuery();
+			while (rs.next()) {
+
+				int pi = rs.getInt("planId");
+				int bi = rs.getInt("batchId");
+				int dn = rs.getInt("daynumber");
+				String t = rs.getString("topic");
+				String s = rs.getString("status");
+
+				CoursPlan cp = new CoursPlan();
+				cp.setPlanId(pi);
+				cp.setBatchId(bi);
+				cp.setDaynumber(dn);
+				cp.setTopic(t);
+				cp.setStatus(s);
+				
+
+				ls.add(cp);
+			}
+
+		} catch (SQLException e) {
+			throw new CoursPlanException(e.getMessage());
+		}
+		if (ls.size() == 0) {
+			throw new CoursPlanException("No CoursPlan Found...");
+		}
+
+		return ls;	
 	}
 
 	

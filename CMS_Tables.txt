@@ -114,3 +114,26 @@ mysql> desc CoursPlan;
 | status    | varchar(10) | NO   |     | NULL    |                |
 +-----------+-------------+------+-----+---------+----------------+
 5 rows in set (0.00 sec)
+
+create table DayWisePlanner(
+Date date,
+FacultyId int,
+Morning int,
+Afternoon int,
+Evening int,
+Foreign Key (FacultyId) references Faculty(FacultyId),
+Foreign Key (Morning) references Batch(BatchId),
+Foreign Key (Afternoon) references Batch(BatchId),
+Foreign Key (Evening) references Batch(BatchId)
+);
+mysql> desc daywiseplanner;
++-----------+------+------+-----+---------+-------+
+| Field     | Type | Null | Key | Default | Extra |
++-----------+------+------+-----+---------+-------+
+| Date      | date | YES  |     | NULL    |       |
+| FacultyId | int  | YES  | MUL | NULL    |       |
+| Morning   | int  | YES  | MUL | NULL    |       |
+| Afternoon | int  | YES  | MUL | NULL    |       |
+| Evening   | int  | YES  | MUL | NULL    |       |
++-----------+------+------+-----+---------+-------+
+5 rows in set (0.01 sec)

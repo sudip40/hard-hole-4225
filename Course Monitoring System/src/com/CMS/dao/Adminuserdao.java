@@ -5,10 +5,12 @@ import java.util.List;
 import com.CMS.bean.Batch;
 import com.CMS.bean.CoursPlan;
 import com.CMS.bean.Course;
+import com.CMS.bean.DayWisePlanner;
 import com.CMS.bean.Faculty;
 import com.CMS.exceptions.BatchException;
 import com.CMS.exceptions.CoursPlanException;
 import com.CMS.exceptions.CourseException;
+import com.CMS.exceptions.DayWisePlannerException;
 import com.CMS.exceptions.FacultyException;
 
 public interface Adminuserdao {
@@ -39,16 +41,19 @@ public interface Adminuserdao {
 	public List<Course> viewAllCourse() throws CourseException;
 	public Course viewCourseByCourseName(String cname) throws CourseException;
 	public Course viewCourseByCourseID(int cid) throws CourseException;
+	public List<Course> viewCourseByBatchID(int id) throws BatchException;
+	public List<Course> viewCourseByFacultyID(int fid) throws CourseException;
+	
 	
 	public String createBatch(Batch b);
+	
 	public String updateBatchnumberofStudents(int id,int nos);
 	public String updateBatchduration(int id,String duration);
 	public String updateBatchbatchstartDate(int id,String date);
 	public String removeBatchByBatchId(int id);
 	
 	public List<Batch> viewAllBatch() throws BatchException;
-	public List<Course> viewCourseByBatchID(int id) throws BatchException;
-	public List<Faculty> viewFacultyByBatchID(int id) throws BatchException;
+	public List<Batch> viewBatchByFacultyID(int fid) throws BatchException;
 	
 	public String registerFaculty(Faculty f);
 	
@@ -62,14 +67,19 @@ public interface Adminuserdao {
 	public String updateFacultyPassword(int id,String pass);
 	
 	public List<Faculty> viewAllFaculty() throws FacultyException;
-	public List<Course> viewCourseByFacultyID(int fid) throws CourseException;
-	public List<Batch> viewBatchByFacultyID(int fid) throws BatchException;
+	public List<Faculty> viewFacultyByBatchID(int id) throws BatchException;
+	
 	
 	public String allocateFaculty(int bid,int fid) throws FacultyException,BatchException;
 	
 	public String createCoursePlan(CoursPlan cp);
+	
 	public String updateCoursePlanStatus(int pid,String s);
 	public String removeCoursePlanById(int pid);
+	
 	public List<CoursPlan> viewAllCoursePlan() throws CoursPlanException;
 	public CoursPlan viewCoursePlanByPlanID(int pid) throws CoursPlanException;
+	public List<DayWisePlanner> ViewDaywiseupdateofeverybatch() throws DayWisePlannerException;
+	public List<CoursPlan> GenerateReportforeverybatch() throws CoursPlanException ;
+
 }

@@ -22,10 +22,11 @@ public class AdminFunc {
     public void createCourse() {
 	 System.out.println("Enter Course Name: ");
   	 String cname=sc.next();
+  	 System.out.println("Enter Course Description: ");
+  	 sc.nextLine();
+ 	 String desc=sc.nextLine();
   	 System.out.println("Enter Course Fee: ");
   	 int fee=sc.nextInt();
-  	 System.out.println("Enter Course Description: ");
-  	 String desc=sc.nextLine();
   	 Course c=new Course();
   	 c.setCourseName(cname);
   	 c.setFee(fee);
@@ -90,11 +91,11 @@ public class AdminFunc {
 	}
 	
 	public void updateCourseDescriptionByName() {
-		System.out.println("Enter New Course Description: ");
-		String desc=sc.nextLine();
 		System.out.println("Enter Course Name: ");
 		String name=sc.next();
-		
+		System.out.println("Enter New Course Description: ");
+		sc.nextLine();
+		String desc=sc.nextLine();
 		String s=a.updateCourseDescriptionByName(name,desc);
 		System.out.println(s);	
 	}
@@ -347,33 +348,160 @@ public class AdminFunc {
 	}
     
 	
-	public List<Faculty> viewAllFaculty(){
-		
+	public void viewAllFaculty(){
+		List<Faculty> ls=new ArrayList<Faculty>();
+		try {
+			ls=a.viewAllFaculty();
+			for(Faculty el:ls) {
+				System.out.println("Faculty ID: "+el.getFacultyid());
+				System.out.println("Faculty Name: "+el.getFacultyname());
+				System.out.println("Faculty Address: "+el.getFacultyaddress());
+				System.out.println("Faculty Mobile: "+el.getMobile());
+				System.out.println("Faculty Email: "+el.getEmail());
+				System.out.println("Faculty Username: "+el.getUsername());
+				System.out.println("====================================================");
+			}
+		} catch (FacultyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public List<Course> viewCourseByFacultyID(int fid){
-		
+	public void viewCourseByFacultyID(){
+		System.out.println("Enter Faculty ID: ");
+		int id=sc.nextInt();
+		List<Course> ls=new ArrayList<Course>();
+		try {
+			ls=a.viewCourseByFacultyID(id);
+			for(Course el:ls) {
+				System.out.println("Course ID : "+el.getCoursed());
+				System.out.println("Course Name : "+el.getCourseName());
+				System.out.println("Course Fee : "+el.getFee());
+				System.out.println("Course Description : "+el.getCourseDescription());
+				System.out.println("=================================================");	
+			}
+		} catch (CourseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public List<Batch> viewBatchByFacultyID(int fid){
-		
+	public void viewBatchByFacultyID(){
+		List<Batch> ls=new ArrayList<Batch>();
+		System.out.println("Enter Faculty ID: ");
+		int id=sc.nextInt();
+		try {
+			ls=a.viewBatchByFacultyID(id);
+			for(Batch el:ls) {
+				System.out.println("Batch ID: "+el.getBatchId());
+				System.out.println("Course ID: "+el.getCourseId());
+				System.out.println("Faculty ID: "+el.getFacultyId());
+				System.out.println("Batch Start Date: "+el.getBatchstartDate());
+				System.out.println("No of Students: "+el.getNumberofStudents());
+				System.out.println("Duration: "+el.getDuration());
+				System.out.println("=============================================");
+			}
+		} catch (BatchException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public String allocateFaculty(int bid,int fid) {
-		
+	public void allocateFaculty() {
+		System.out.println("Enter Batch ID: ");
+		int bid=sc.nextInt();
+		System.out.println("Enter Faculty ID: ");
+		int fid=sc.nextInt();
+		String s;
+		try {
+			s = a.allocateFaculty(bid,fid);
+			System.out.println(s);
+		} catch (FacultyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BatchException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public String createCoursePlan(CoursPlan cp) {
-		
+	public void createCoursePlan() {
+		System.out.println("Enter Batch ID: ");
+		int bid=sc.nextInt();
+		System.out.println("Enter Day Number: ");
+		int dn=sc.nextInt();
+		System.out.println("Enter Topic: ");
+		String t=sc.next();
+		System.out.println("Enter Status: ");
+		String st=sc.next();
+		CoursPlan cp=new CoursPlan();
+		cp.setBatchId(bid);
+		cp.setDaynumber(dn);
+		cp.setTopic(t);
+		cp.setStatus(st);
+		String s=a.createCoursePlan(cp);
+		System.out.println(s);
 	}
-	public String updateCoursePlanStatus(int pid,String s) {
-		
+	public void updateCoursePlanStatus() {
+		System.out.println("Enter Plan ID: ");
+		int id =sc.nextInt();
+		System.out.println("Enter New Status: ");
+		String st=sc.next();
+		String s=a.updateCoursePlanStatus(id,st);
+		System.out.println(s);
 	}
-	public String removeCoursePlanById(int pid) {
-		
+	public void removeCoursePlanById() {
+		System.out.println("Enter Plan ID: ");
+		int id =sc.nextInt();
+		String s=a.removeCoursePlanById(id);
+		System.out.println(s);
 	}
-	public List<CoursPlan> viewAllCoursePlan(){
-		
+	public void viewAllCoursePlan(){
+		List<CoursPlan> ls=new ArrayList<CoursPlan>();
+		try {
+			ls=a.viewAllCoursePlan();
+			for(CoursPlan el:ls) {
+				System.out.println("Plan ID:"+el.getPlanId());
+				System.out.println("Batch ID: "+el.getBatchId());
+				System.out.println("Day Number: "+el.getDaynumber());
+				System.out.println("Topic: "+el.getTopic());
+				System.out.println("Status: "+el.getStatus());
+				System.out.println("====================================");
+			}
+		} catch (CoursPlanException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public CoursPlan viewCoursePlanByPlanID(int pid) {
-		
+	public void viewCoursePlanByPlanID() {
+		System.out.println("Enter Plan ID: ");
+		int id =sc.nextInt();
+		try {
+			CoursPlan cp=a.viewCoursePlanByPlanID(id);
+			System.out.println("Plan ID:"+cp.getPlanId());
+			System.out.println("Batch ID: "+cp.getBatchId());
+			System.out.println("Day Number: "+cp.getDaynumber());
+			System.out.println("Topic: "+cp.getTopic());
+			System.out.println("Status: "+cp.getStatus());
+			
+		} catch (CoursPlanException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void GenerateReportforeverybatch(){
+		List<CoursPlan> ls=new ArrayList<CoursPlan>();
+		try {
+			ls=a.GenerateReportforeverybatch();
+			for(CoursPlan el:ls) {
+				
+				System.out.println("Batch ID: "+el.getBatchId());
+				System.out.println("Plan ID:"+el.getPlanId());
+				System.out.println("Day Number: "+el.getDaynumber());
+				System.out.println("Topic: "+el.getTopic());
+				System.out.println("Status: "+el.getStatus());
+				System.out.println("====================================");
+			}
+		} catch (CoursPlanException e) {
+			e.printStackTrace();
+		}	
 	}
 }
