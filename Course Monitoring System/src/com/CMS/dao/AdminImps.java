@@ -1,12 +1,10 @@
 package com.CMS.dao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.CMS.bean.Batch;
 import com.CMS.bean.CoursPlan;
 import com.CMS.bean.Course;
@@ -425,8 +423,8 @@ public class AdminImps implements Adminuserdao {
 	public List<Faculty> viewFacultyByBatchID(int id) throws BatchException {
 		List<Faculty> ls = new ArrayList<Faculty>();
 		try (Connection conn = DBUtil.provideConnction()) {
-			PreparedStatement p = conn.prepareStatement("select f.facultyid,f.facultyname,f.facultyaddress,f.mobile,f.email,f.username,f.password Faculty f INNER JOIN batch b ON f.facultyid=b.facultyid WHERE b.batchId=?");
-
+			PreparedStatement p = conn.prepareStatement("select f.facultyid,f.facultyname,f.facultyaddress,f.mobile,f.email,f.username,f.password from Faculty f INNER JOIN batch b ON f.facultyid=b.facultyid WHERE b.batchId=?");
+            p.setInt(1, id);
 			ResultSet rs = p.executeQuery();
 			while (rs.next()) {
 
@@ -485,7 +483,7 @@ public class AdminImps implements Adminuserdao {
 	public List<Faculty> viewAllFaculty() throws FacultyException {
 		List<Faculty> ls = new ArrayList<Faculty>();
 		try (Connection conn = DBUtil.provideConnction()) {
-			PreparedStatement p = conn.prepareStatement("select * from batch");
+			PreparedStatement p = conn.prepareStatement("select * from faculty");
 
 			ResultSet rs = p.executeQuery();
 			while (rs.next()) {
@@ -496,15 +494,13 @@ public class AdminImps implements Adminuserdao {
 				String mob = rs.getString("mobile");
 				String email = rs.getString("email");
 				String un = rs.getString("username");
-
-				Faculty f = new Faculty();
-				f.setFacultyid(fi);
+                Faculty f=new Faculty();
 				f.setFacultyname(fn);
+				f.setFacultyid(fi);
+				f.setEmail(email);
 				f.setFacultyaddress(fa);
 				f.setMobile(mob);
-				f.setEmail(email);
 				f.setUsername(un);
-
 				ls.add(f);
 			}
 
